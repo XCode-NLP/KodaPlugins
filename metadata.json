@@ -1,4 +1,83 @@
 {
-  "lastUpdate": "2026-11-17T17:34:05.428Z",
-  "plugins": []
+  "lastUpdate": "2026-11-17T22:50:24.605Z",
+  "plugins": [
+    {
+      "id": "dev.koda.companion",
+      "name": {
+        "ru": "Компаньон",
+        "en": "Companion"
+      },
+      "description": {
+        "ru": "Агент ведёт по задаче, открывает места в коде и даёт написать их самому, с подсказками и мягкой проверкой.",
+        "en": "The agent guides you through a task, opens spots in the code for you to write, and gives hints and gentle reviews."
+      },
+      "version": "1.0.0",
+      "publisher": "Koda",
+      "permissions": [
+        "project.read",
+        "project.write",
+        "agent.run",
+        "process.run"
+      ],
+      "homepage": "https://github.com/XCode-NLP/KodaPluginCompanion",
+      "archive": {
+        "url": "https://github.com/XCode-NLP/KodaPluginCompanion/releases/download/v1.0.0/dev.koda.companion-1.0.0.kodaplugin",
+        "sha256": "514dfd468a6bd7b1ea24979b57c65b65b9a7b67e63052b43787adbc753a3d633",
+        "size": 748566
+      }
+    },
+    {
+      "id": "dev.koda.presentations",
+      "name": {
+        "ru": "Презентации",
+        "en": "Presentations"
+      },
+      "description": {
+        "ru": "Презентации рядом с чатом: агент собирает слайды по дизайн-системе, вы правите их в панели, экспорт в PPTX и PDF.",
+        "en": "Presentations alongside chat: the agent builds slides from a design system, you edit them in the panel, export to PPTX and PDF."
+      },
+      "version": "0.2.0",
+      "publisher": "Koda",
+      "permissions": [
+        "project.read",
+        "project.write",
+        "process.run",
+        "chat.context",
+        "agent.tools",
+        "chat.composer"
+      ],
+      "homepage": "https://github.com/XCode-NLP/KodaPluginPresentations",
+      "archive": {
+        "url": "https://github.com/XCode-NLP/KodaPluginPresentations/releases/download/v0.2.0/dev.koda.presentations-0.2.0.kodaplugin",
+        "sha256": "e3f5a5c2abb98b1f9bf8912bc71effd7677f44ea470e41c8c2731aa21ffa85c5",
+        "size": 836927
+      }
+    },
+    {
+      "id": "dev.koda.project-map",
+      "name": {
+        "ru": "Карта проекта",
+        "en": "Project map"
+      },
+      "description": {
+        "ru": "Модули и зависимости проекта. Передавайте модули агенту и смотрите область влияния задачи рядом с чатом.",
+        "en": "Project modules and dependencies. Reference modules in chat and inspect the predicted impact of a task."
+      },
+      "version": "0.2.0",
+      "publisher": "Koda",
+      "permissions": [
+        "project.read",
+        "agent.run",
+        "agent.tools",
+        "chat.composer",
+        "chat.context"
+      ],
+      "homepage": "https://github.com/XCode-NLP/KodaPluginProjectMap",
+      "archive": {
+        "url": "https://github.com/XCode-NLP/KodaPluginProjectMap/releases/download/v0.2.0/dev.koda.project-map-0.2.0.kodaplugin",
+        "sha256": "ba91000b00a93d2e521f6476cbc9cbf5f1595dd816b5b01824c13efc7479c09a",
+        "size": 709894
+      }
+    }
+  ]
 }
