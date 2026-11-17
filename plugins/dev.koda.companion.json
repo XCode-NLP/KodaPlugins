@@ -1,0 +1,8 @@
+{
+  "id": "dev.koda.companion",
+  "homepage": "https://github.com/XCode-NLP/KodaPluginCompanion",
+  "archive": {
+    "url": "https://github.com/XCode-NLP/KodaPluginCompanion/releases/download/v1.0.0/dev.koda.companion-1.0.0.kodaplugin",
+    "sha256": "514dfd468a6bd7b1ea24979b57c65b65b9a7b67e63052b43787adbc753a3d633"
+  }
+}

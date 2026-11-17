@@ -1,0 +1,8 @@
+{
+  "id": "dev.koda.project-map",
+  "homepage": "https://github.com/XCode-NLP/KodaPluginProjectMap",
+  "archive": {
+    "url": "https://github.com/XCode-NLP/KodaPluginProjectMap/releases/download/v0.2.0/dev.koda.project-map-0.2.0.kodaplugin",
+    "sha256": "ba91000b00a93d2e521f6476cbc9cbf5f1595dd816b5b01824c13efc7479c09a"
+  }
+}
