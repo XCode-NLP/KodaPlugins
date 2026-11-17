@@ -1,0 +1,8 @@
+{
+  "id": "dev.koda.presentations",
+  "homepage": "https://github.com/XCode-NLP/KodaPluginPresentations",
+  "archive": {
+    "url": "https://github.com/XCode-NLP/KodaPluginPresentations/releases/download/v0.2.0/dev.koda.presentations-0.2.0.kodaplugin",
+    "sha256": "e3f5a5c2abb98b1f9bf8912bc71effd7677f44ea470e41c8c2731aa21ffa85c5"
+  }
+}
