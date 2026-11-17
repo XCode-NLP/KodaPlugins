@@ -6,7 +6,7 @@ Koda Desktop читает [`metadata.json`](metadata.json). Этот файл с
 
 ## Как добавить плагин
 
-1. Создайте плагин из шаблона [koda-plugin-template](https://github.com/XCode-NLP/koda-plugin-template) (кнопка «Use this template»).
+1. Создайте плагин из шаблона [KodaPluginTemplate](https://github.com/XCode-NLP/KodaPluginTemplate) (кнопка «Use this template»).
 2. Поставьте тег `v1.0.0`: GitHub Actions соберёт архив и приложит его к релизу вместе с `SHA256SUMS`.
 3. Сделайте форк этого репозитория и добавьте файл `plugins/<id>.json`, где `<id>` совпадает с `id` в `koda-plugin.json`:
 

@@ -1,5 +1,5 @@
 {
-  "name": "koda-desktop-plugins",
+  "name": "koda-plugins",
   "private": true,
   "type": "module",
   "scripts": {
