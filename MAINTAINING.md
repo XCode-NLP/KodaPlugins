@@ -39,6 +39,7 @@ npm run build   # проверить записи и записать metadata.j
       "publisher": "Koda Examples",
       "permissions": ["agent.tools", "chat.composer"],
       "homepage": "https://github.com/you/hello",
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0i…",
       "archive": {
         "url": "https://github.com/you/hello/releases/download/v1.0.0/com.example.hello-1.0.0.kodaplugin",
         "sha256": "a804257a23287086691f365bc4ae44e1dbbbb58efe4a73d2864e1193182d6118",
@@ -48,6 +49,8 @@ npm run build   # проверить записи и записать metadata.j
   ]
 }
 ```
+
+Поле `icon` CI берёт из файла `icon` манифеста: SVG или PNG до 64 КБ, закодированный в data-URL. Если иконки нет или она больше, поля нет, и карточка показывает значок по умолчанию.
 
 Поля `name`, `description`, `version`, `publisher` и `permissions` берутся из `koda-plugin.json` внутри архива. `size` содержит размер архива в байтах. Архив больше 60 МБ не проходит проверку, потому что установщик Koda Desktop его тоже отвергнет.
 

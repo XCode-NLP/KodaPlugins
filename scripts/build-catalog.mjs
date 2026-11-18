@@ -55,6 +55,17 @@ async function download(file, url) {
   return data;
 }
 
+/** The manifest icon as a data URL (SVG or PNG up to 64 KB), so the marketplace card can show it. */
+function iconOf(unpacked, manifest) {
+  if (typeof manifest.icon !== "string") return {};
+  const type = /\.svg$/i.test(manifest.icon) ? "image/svg+xml" : /\.png$/i.test(manifest.icon) ? "image/png" : null;
+  const file = path.resolve(unpacked, manifest.icon);
+  if (!type || !file.startsWith(unpacked + path.sep) || !fs.existsSync(file)) return {};
+  const bytes = fs.readFileSync(file);
+  if (bytes.length > 64 * 1024) return {};
+  return { icon: `data:${type};base64,${bytes.toString("base64")}` };
+}
+
 async function inspect(file, entry) {
   const data = await download(file, entry.archive.url);
   const sha256 = createHash("sha256").update(data).digest("hex");
@@ -77,6 +88,7 @@ async function inspect(file, entry) {
       publisher: manifest.publisher,
       permissions: manifest.permissions,
       ...(entry.homepage ? { homepage: entry.homepage } : {}),
+      ...iconOf(unpacked, manifest),
       archive: { url: entry.archive.url, sha256, size: data.length },
     };
   } catch (error) {
