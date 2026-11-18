@@ -1,6 +1,7 @@
 // Собирает metadata.json из plugins/*.json: скачивает каждый архив, сверяет
 // sha256, проверяет манифест через koda-plugin validate и берёт из него
-// имя, описание, версию, издателя и разрешения.
+// имя, описание, версию, издателя и разрешения. addedAt — когда плагин попал
+// в каталог: из прошлого metadata.json, иначе по первому коммиту записи.
 //
 //   node scripts/build-catalog.mjs          проверить и записать metadata.json
 //   node scripts/build-catalog.mjs --check  только проверить (для PR)
@@ -66,6 +67,33 @@ function iconOf(unpacked, manifest) {
   return { icon: `data:${type};base64,${bytes.toString("base64")}` };
 }
 
+const previousMetadata = fs.existsSync(METADATA) ? JSON.parse(fs.readFileSync(METADATA, "utf8")) : null;
+const previousAddedAt = new Map(
+  (previousMetadata?.plugins ?? []).filter((item) => item.addedAt).map((item) => [item.id, item.addedAt]),
+);
+
+/**
+ * Дата добавления плагина в каталог. Уже записанная не меняется, иначе берётся
+ * дата первого коммита plugins/<id>.json (нужна полная история, fetch-depth: 0),
+ * а для записи вне истории (новый файл до коммита) — текущее время.
+ */
+function addedAtOf(id, file) {
+  const known = previousAddedAt.get(id);
+  if (known) return known;
+  try {
+    const dates = execFileSync(
+      "git",
+      ["log", "--diff-filter=A", "--follow", "--format=%aI", "--", path.join("plugins", file)],
+      { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
+    ).trim().split("\n").filter(Boolean);
+    const first = dates.at(-1);
+    if (first) return new Date(first).toISOString();
+  } catch {
+    // Нет git или истории: падать из-за даты не стоит.
+  }
+  return new Date().toISOString();
+}
+
 async function inspect(file, entry) {
   const data = await download(file, entry.archive.url);
   const sha256 = createHash("sha256").update(data).digest("hex");
@@ -89,6 +117,7 @@ async function inspect(file, entry) {
       permissions: manifest.permissions,
       ...(entry.homepage ? { homepage: entry.homepage } : {}),
       ...iconOf(unpacked, manifest),
+      addedAt: addedAtOf(manifest.id, file),
       archive: { url: entry.archive.url, sha256, size: data.length },
     };
   } catch (error) {
@@ -121,7 +150,7 @@ if (check) {
   console.log(`\nВсе записи в порядке: ${plugins.length}`);
 } else {
   // lastUpdate меняется только вместе со списком, чтобы не было пустых коммитов.
-  const previous = fs.existsSync(METADATA) ? JSON.parse(fs.readFileSync(METADATA, "utf8")) : null;
+  const previous = previousMetadata;
   const unchanged = previous && JSON.stringify(previous.plugins) === JSON.stringify(plugins);
   const lastUpdate = unchanged ? previous.lastUpdate : new Date().toISOString();
   fs.writeFileSync(METADATA, `${JSON.stringify({ lastUpdate, plugins }, null, 2)}\n`);
