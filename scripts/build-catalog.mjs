@@ -2,6 +2,8 @@
 // sha256, проверяет манифест через koda-plugin validate и берёт из него
 // имя, описание, версию, издателя и разрешения. addedAt — когда плагин попал
 // в каталог: из прошлого metadata.json, иначе по первому коммиту записи.
+// updatedAt — когда сменился архив: тот же sha256 сохраняет прошлую дату,
+// новый берёт дату последнего коммита записи.
 //
 //   node scripts/build-catalog.mjs          проверить и записать metadata.json
 //   node scripts/build-catalog.mjs --check  только проверить (для PR)
@@ -68,9 +70,23 @@ function iconOf(unpacked, manifest) {
 }
 
 const previousMetadata = fs.existsSync(METADATA) ? JSON.parse(fs.readFileSync(METADATA, "utf8")) : null;
-const previousAddedAt = new Map(
-  (previousMetadata?.plugins ?? []).filter((item) => item.addedAt).map((item) => [item.id, item.addedAt]),
-);
+const previousPlugins = new Map((previousMetadata?.plugins ?? []).map((item) => [item.id, item]));
+
+/** Даты коммитов, менявших plugins/<file>, от новых к старым; пусто без git или истории. */
+function commitDates(file, extra = []) {
+  try {
+    return execFileSync(
+      "git",
+      ["log", ...extra, "--follow", "--format=%aI", "--", path.join("plugins", file)],
+      { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
+    ).trim().split("\n").filter(Boolean);
+  } catch {
+    // Нет git или истории: падать из-за даты не стоит.
+    return [];
+  }
+}
+
+const iso = (value) => (value ? new Date(value).toISOString() : new Date().toISOString());
 
 /**
  * Дата добавления плагина в каталог. Уже записанная не меняется, иначе берётся
@@ -78,20 +94,18 @@ const previousAddedAt = new Map(
  * а для записи вне истории (новый файл до коммита) — текущее время.
  */
 function addedAtOf(id, file) {
-  const known = previousAddedAt.get(id);
-  if (known) return known;
-  try {
-    const dates = execFileSync(
-      "git",
-      ["log", "--diff-filter=A", "--follow", "--format=%aI", "--", path.join("plugins", file)],
-      { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
-    ).trim().split("\n").filter(Boolean);
-    const first = dates.at(-1);
-    if (first) return new Date(first).toISOString();
-  } catch {
-    // Нет git или истории: падать из-за даты не стоит.
-  }
-  return new Date().toISOString();
+  return previousPlugins.get(id)?.addedAt ?? iso(commitDates(file, ["--diff-filter=A"]).at(-1));
+}
+
+/**
+ * Когда плагин последний раз обновился. Пока архив тот же (sha256 совпадает),
+ * дата из прошлого metadata.json сохраняется; новый архив означает новый коммит
+ * записи, и берётся его дата. Без истории — текущее время.
+ */
+function updatedAtOf(id, file, sha256) {
+  const previous = previousPlugins.get(id);
+  if (previous?.updatedAt && previous.archive?.sha256 === sha256) return previous.updatedAt;
+  return iso(commitDates(file)[0]);
 }
 
 async function inspect(file, entry) {
@@ -118,6 +132,7 @@ async function inspect(file, entry) {
       ...(entry.homepage ? { homepage: entry.homepage } : {}),
       ...iconOf(unpacked, manifest),
       addedAt: addedAtOf(manifest.id, file),
+      updatedAt: updatedAtOf(manifest.id, file, sha256),
       archive: { url: entry.archive.url, sha256, size: data.length },
     };
   } catch (error) {
