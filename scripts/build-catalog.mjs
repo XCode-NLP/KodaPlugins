@@ -1,6 +1,9 @@
 // Собирает metadata.json из plugins/*.json: скачивает каждый архив, сверяет
 // sha256, проверяет манифест через koda-plugin validate и берёт из него
-// имя, описание, версию, издателя и разрешения.
+// имя, описание, версию, издателя и разрешения. addedAt — когда плагин попал
+// в каталог: из прошлого metadata.json, иначе по первому коммиту записи.
+// updatedAt — когда сменился архив: тот же sha256 сохраняет прошлую дату,
+// новый берёт дату последнего коммита записи.
 //
 //   node scripts/build-catalog.mjs          проверить и записать metadata.json
 //   node scripts/build-catalog.mjs --check  только проверить (для PR)
@@ -66,6 +69,45 @@ function iconOf(unpacked, manifest) {
   return { icon: `data:${type};base64,${bytes.toString("base64")}` };
 }
 
+const previousMetadata = fs.existsSync(METADATA) ? JSON.parse(fs.readFileSync(METADATA, "utf8")) : null;
+const previousPlugins = new Map((previousMetadata?.plugins ?? []).map((item) => [item.id, item]));
+
+/** Даты коммитов, менявших plugins/<file>, от новых к старым; пусто без git или истории. */
+function commitDates(file, extra = []) {
+  try {
+    return execFileSync(
+      "git",
+      ["log", ...extra, "--follow", "--format=%aI", "--", path.join("plugins", file)],
+      { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] },
+    ).trim().split("\n").filter(Boolean);
+  } catch {
+    // Нет git или истории: падать из-за даты не стоит.
+    return [];
+  }
+}
+
+const iso = (value) => (value ? new Date(value).toISOString() : new Date().toISOString());
+
+/**
+ * Дата добавления плагина в каталог. Уже записанная не меняется, иначе берётся
+ * дата первого коммита plugins/<id>.json (нужна полная история, fetch-depth: 0),
+ * а для записи вне истории (новый файл до коммита) — текущее время.
+ */
+function addedAtOf(id, file) {
+  return previousPlugins.get(id)?.addedAt ?? iso(commitDates(file, ["--diff-filter=A"]).at(-1));
+}
+
+/**
+ * Когда плагин последний раз обновился. Пока архив тот же (sha256 совпадает),
+ * дата из прошлого metadata.json сохраняется; новый архив означает новый коммит
+ * записи, и берётся его дата. Без истории — текущее время.
+ */
+function updatedAtOf(id, file, sha256) {
+  const previous = previousPlugins.get(id);
+  if (previous?.updatedAt && previous.archive?.sha256 === sha256) return previous.updatedAt;
+  return iso(commitDates(file)[0]);
+}
+
 async function inspect(file, entry) {
   const data = await download(file, entry.archive.url);
   const sha256 = createHash("sha256").update(data).digest("hex");
@@ -89,6 +131,8 @@ async function inspect(file, entry) {
       permissions: manifest.permissions,
       ...(entry.homepage ? { homepage: entry.homepage } : {}),
       ...iconOf(unpacked, manifest),
+      addedAt: addedAtOf(manifest.id, file),
+      updatedAt: updatedAtOf(manifest.id, file, sha256),
       archive: { url: entry.archive.url, sha256, size: data.length },
     };
   } catch (error) {
@@ -121,7 +165,7 @@ if (check) {
   console.log(`\nВсе записи в порядке: ${plugins.length}`);
 } else {
   // lastUpdate меняется только вместе со списком, чтобы не было пустых коммитов.
-  const previous = fs.existsSync(METADATA) ? JSON.parse(fs.readFileSync(METADATA, "utf8")) : null;
+  const previous = previousMetadata;
   const unchanged = previous && JSON.stringify(previous.plugins) === JSON.stringify(plugins);
   const lastUpdate = unchanged ? previous.lastUpdate : new Date().toISOString();
   fs.writeFileSync(METADATA, `${JSON.stringify({ lastUpdate, plugins }, null, 2)}\n`);
