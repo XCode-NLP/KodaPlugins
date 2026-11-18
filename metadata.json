@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026-11-17T22:50:24.605Z",
+  "lastUpdate": "2026-11-18T07:52:25.521Z",
   "plugins": [
     {
       "id": "dev.koda.companion",
@@ -20,6 +20,7 @@
         "process.run"
       ],
       "homepage": "https://github.com/XCode-NLP/KodaPluginCompanion",
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNjMzFiZmEiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMjEuNDIgMTAuOTIyYTEgMSAwIDAgMC0uMDE5LTEuODM4TDEyLjgzIDUuMThhMiAyIDAgMCAwLTEuNjYgMEwyLjYgOS4wOGExIDEgMCAwIDAgMCAxLjgzMmw4LjU3IDMuOTA4YTIgMiAwIDAgMCAxLjY2IDB6Ii8+PHBhdGggZD0iTTIyIDEwdjYiLz48cGF0aCBkPSJNNiAxMi41VjE2YTYgMyAwIDAgMCAxMiAwdi0zLjUiLz48L3N2Zz4K",
       "archive": {
         "url": "https://github.com/XCode-NLP/KodaPluginCompanion/releases/download/v1.0.0/dev.koda.companion-1.0.0.kodaplugin",
         "sha256": "514dfd468a6bd7b1ea24979b57c65b65b9a7b67e63052b43787adbc753a3d633",
@@ -47,6 +48,7 @@
         "chat.composer"
       ],
       "homepage": "https://github.com/XCode-NLP/KodaPluginPresentations",
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNjMzFiZmEiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMiAzaDIwIi8+PHBhdGggZD0iTTIxIDN2MTFhMiAyIDAgMCAxLTIgMkg1YTIgMiAwIDAgMS0yLTJWMyIvPjxwYXRoIGQ9Im03IDIxIDUtNSA1IDUiLz48L3N2Zz4K",
       "archive": {
         "url": "https://github.com/XCode-NLP/KodaPluginPresentations/releases/download/v0.2.0/dev.koda.presentations-0.2.0.kodaplugin",
         "sha256": "e3f5a5c2abb98b1f9bf8912bc71effd7677f44ea470e41c8c2731aa21ffa85c5",
@@ -73,6 +75,7 @@
         "chat.context"
       ],
       "homepage": "https://github.com/XCode-NLP/KodaPluginProjectMap",
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNjMzFiZmEiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cmVjdCB4PSIxNiIgeT0iMTYiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIHJ4PSIxIi8+PHJlY3QgeD0iMiIgeT0iMTYiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIHJ4PSIxIi8+PHJlY3QgeD0iOSIgeT0iMiIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjEiLz48cGF0aCBkPSJNNSAxNnYtM2ExIDEgMCAwIDEgMS0xaDEyYTEgMSAwIDAgMSAxIDF2MyIvPjxwYXRoIGQ9Ik0xMiAxMlY4Ii8+PC9zdmc+Cg==",
       "archive": {
         "url": "https://github.com/XCode-NLP/KodaPluginProjectMap/releases/download/v0.2.0/dev.koda.project-map-0.2.0.kodaplugin",
         "sha256": "ba91000b00a93d2e521f6476cbc9cbf5f1595dd816b5b01824c13efc7479c09a",
